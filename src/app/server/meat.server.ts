@@ -1,4 +1,5 @@
 import * as restify from 'restify';
+import { IRouter } from '../interfaces/router.interface';
 
 class MeatServer {
     // tslint:disable-next-line: variable-name
@@ -8,11 +9,11 @@ class MeatServer {
         return this._application!;
     }
 
-    public bootstrap(): Promise<MeatServer> {
-        return this.initRoutes().then(() => this);
+    public bootstrap(routers: IRouter[]): Promise<MeatServer> {
+        return this.initRoutes(routers).then(() => this);
     }
 
-    private initRoutes(): Promise<restify.Server> {
+    private initRoutes(routers: IRouter[]): Promise<restify.Server> {
         return new Promise<restify.Server>((resolve, reject) => {
             try {
 
@@ -26,6 +27,10 @@ class MeatServer {
                 this._application.get('/hello', (req, res, next) => {
                     res.json({ message: 'Hello World' });
                     return next();
+                });
+
+                routers.forEach((router: IRouter) => {
+                    router.applyRouter(this._application!);
                 });
 
                 this._application.listen(3000, () => {

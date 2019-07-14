@@ -1,8 +1,14 @@
-import meatServer from './app/meat.server';
+import meatServer from './app/server/meat.server';
+import { Router } from './app/server/router';
+import userRouter from './app/users/user.router';
 
 console.log('Hello World');
 
-meatServer.bootstrap()
+const routers: Router[] = [
+    userRouter,
+];
+
+meatServer.bootstrap(routers)
     .then((server) => {
         console.log('Server is listening on: ', server.application.address());
     }).catch((err) => {
