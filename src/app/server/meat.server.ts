@@ -1,5 +1,7 @@
 import * as restify from 'restify';
+import * as mongoose from 'mongoose';
 import { IRouter } from '../interfaces/router.interface';
+import { environment } from '../../environments/environment';
 
 class MeatServer {
     // tslint:disable-next-line: variable-name
@@ -10,7 +12,13 @@ class MeatServer {
     }
 
     public bootstrap(routers: IRouter[]): Promise<MeatServer> {
-        return this.initRoutes(routers).then(() => this);
+        return this.initializeDatabase()
+            .then(() => this.initRoutes(routers)
+                .then(() => this));
+    }
+
+    private initializeDatabase(): Promise<mongoose.Mongoose> {
+        return mongoose.connect(environment.database.url, { useNewUrlParser: true });
     }
 
     private initRoutes(routers: IRouter[]): Promise<restify.Server> {

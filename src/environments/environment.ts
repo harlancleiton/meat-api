@@ -1,5 +1,5 @@
 export const environment = {
-    database: { url: process.env.DATABASE_URL || 'mongodb://localhost/protocolable-dev' },
+    database: { url: process.env.DATABASE_URL || 'mongodb://localhost/meat-dev' },
     security: {
         jwtExpiration: process.env.JWT_EXPIRATION || 15,
         prefixToken: process.env.PREFIX_TOKEN || 'Bearer',
