@@ -28,12 +28,47 @@ class UserRouter extends Router {
             });
         });
 
-        application.put('/users/:id', (req, res, next) => {
-            userModel.updateOne({ _id: req.params.id }, req.body, { overwrite: true }).exec()
-                .then((user: IUser | null) => {
-                    console.log('User: ' + user);
-                    res.json(user);
+        application.put('/users/:id', (req, resp, next) => {
+            const options: mongoose.ModelUpdateOptions = { overwrite: true, runValidators: true };
+            userModel.update({ _id: req.params.id }, req.body, options)
+                // @ts-ignore
+                .exec().then((query: mongoose.Query<any>) => {
+                    // @ts-ignore
+                    if (query.n) {
+                        return userModel.findById(req.params.id).exec();
+                    } else {
+                        resp.send(404);
+                    }
+                }).then((user: IUser | null) => {
+                    resp.json(user);
                     return next();
+                });
+        });
+
+        application.patch('/users/:id', (req, res, next) => {
+            const options: mongoose.QueryFindOneAndUpdateOptions = { new: true, runValidators: true };
+            userModel.findByIdAndUpdate(req.params.id, req.body, options).exec()
+                .then((user: IUser | null) => {
+                    if (user) {
+                        res.json(user);
+                        return next();
+                    } else {
+                        res.send(404);
+                        return next();
+                    }
+                });
+        });
+
+        application.del('/users/:id', (req, res, next) => {
+            userModel.findByIdAndDelete(req.params.id).exec()
+                .then((user: IUser | null) => {
+                    if (user) {
+                        res.send(204);
+                        return next();
+                    } else {
+                        res.send(404);
+                        return next();
+                    }
                 });
         });
 
