@@ -1,7 +1,7 @@
-import * as restify from 'restify';
 import * as mongoose from 'mongoose';
-import { IRouter } from '../interfaces/router.interface';
+import * as restify from 'restify';
 import { environment } from '../../environments/environment';
+import { IRouter } from '../interfaces/router.interface';
 
 class MeatServer {
     // tslint:disable-next-line: variable-name
@@ -18,7 +18,8 @@ class MeatServer {
     }
 
     private initializeDatabase(): Promise<mongoose.Mongoose> {
-        return mongoose.connect(environment.database.url, { useNewUrlParser: true });
+        return mongoose.connect(environment.database.url,
+            { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false });
     }
 
     private initRoutes(routers: IRouter[]): Promise<restify.Server> {
@@ -30,6 +31,7 @@ class MeatServer {
                     version: '1.0.0'
                 });
 
+                this._application.use(restify.plugins.queryParser());
                 this._application.use(restify.plugins.bodyParser());
 
                 this._application.get('/hello', (req, res, next) => {

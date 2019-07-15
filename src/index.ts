@@ -1,6 +1,6 @@
 import meatServer from './app/server/meat.server';
 import { Router } from './app/server/router';
-import userRouter from './app/users/user.router';
+import { userRouter } from './app/users/user.router';
 
 console.log('Hello World');
 
