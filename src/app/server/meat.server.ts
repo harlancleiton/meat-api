@@ -2,6 +2,7 @@ import * as mongoose from 'mongoose';
 import * as restify from 'restify';
 import { environment } from '../../environments/environment';
 import { IRouter } from '../interfaces/router.interface';
+import { errorHandler } from './error.handler';
 
 class MeatServer {
     // tslint:disable-next-line: variable-name
@@ -46,6 +47,8 @@ class MeatServer {
                 this._application.listen(3000, () => {
                     resolve(this._application);
                 });
+
+                this._application.on('restifyError', errorHandler);
 
             } catch (error) {
                 reject(error);

@@ -7,25 +7,21 @@ class UserRouter extends Router {
 
     constructor() {
         super();
-        this.on('beforeRender', (document: mongoose.Document | IUser | any) => {
-            if (document.password) {
-                document.password = undefined;
-            }
-        });
+        this.listenBeforeRender();
     }
 
     public applyRouter(application: restify.Server): void {
 
         application.get('/users', (req, res, next) => {
-            userModel.find().exec().then(this.render(req, res, next));
+            userModel.find().exec().then(this.render(req, res, next)).catch(next);
         });
 
         application.get('/users/:id', (req, res, next) => {
-            userModel.findById(req.params.id).exec().then(this.render(req, res, next));
+            userModel.findById(req.params.id).exec().then(this.render(req, res, next)).catch(next);
         });
 
         application.post('/users', (req, res, next) => {
-            userModel.create(req.body).then(this.render(req, res, next));
+            userModel.create(req.body).then(this.render(req, res, next)).catch(next);
         });
 
         application.put('/users/:id', (req, res, next) => {
@@ -40,20 +36,28 @@ class UserRouter extends Router {
                     } else {
                         res.send(404);
                     }
-                }).then(this.render(req, res, next));
+                }).then(this.render(req, res, next)).catch(next);
         });
 
         application.patch('/users/:id', (req, res, next) => {
             const options: mongoose.QueryFindOneAndUpdateOptions = { new: true, runValidators: true };
             userModel.findByIdAndUpdate(req.params.id, req.body, options).exec()
-                .then(this.render(req, res, next));
+                .then(this.render(req, res, next)).catch(next);
         });
 
         application.del('/users/:id', (req, res, next) => {
             userModel.findByIdAndDelete(req.params.id).exec()
-                .then(this.render(req, res, next));
+                .then(this.render(req, res, next)).catch(next);
         });
 
+    }
+
+    private listenBeforeRender(): void {
+        this.on('beforeRender', (document: mongoose.Document | IUser | any) => {
+            if (document.password) {
+                document.password = undefined;
+            }
+        });
     }
 }
 
