@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import { cpfValidator } from '../validators/cpf.validator';
 
 export interface IUser extends mongoose.Document {
     id: string;
@@ -10,6 +11,13 @@ export interface IUser extends mongoose.Document {
 }
 
 const userSchema: mongoose.Schema = new mongoose.Schema({
+    cpf: {
+        type: String,
+        validate: {
+            msg: '{PATH}: Invalid CPF ({VALUE})',
+            validator: cpfValidator,
+        }
+    },
     email: {
         // tslint:disable-next-line: max-line-length
         match: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,

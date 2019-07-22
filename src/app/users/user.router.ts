@@ -26,17 +26,16 @@ class UserRouter extends Router {
 
         application.put('/users/:id', (req, res, next) => {
             const options: mongoose.ModelUpdateOptions = { overwrite: true, runValidators: true };
-            userModel.update({ _id: req.params.id }, req.body, options)
-                .exec().catch((err) => { console.log('Failed'); })
-                // @ts-ignore
-                .then((query: mongoose.Query<any>) => {
-                    // @ts-ignore
+            // TODO melhorar update
+            userModel.update({ _id: req.params.id }, req.body, options).exec()
+                .then((query) => {
                     if (query.n) {
-                        return userModel.findById(req.params.id).exec();
+                        res.send(204);
                     } else {
                         res.send(404);
                     }
-                }).then(this.render(req, res, next)).catch(next);
+                    return next();
+                }).catch(next);
         });
 
         application.patch('/users/:id', (req, res, next) => {
