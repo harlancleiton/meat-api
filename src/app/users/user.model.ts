@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import { encryptPassword } from '../middlewares/encrypt-password.middleware';
 import { cpfValidator } from '../validators/cpf.validator';
 
 export interface IUser extends mongoose.Document {
@@ -45,5 +46,7 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
         timestamps: true
     }
 );
+
+userSchema.pre('save', encryptPassword);
 
 export const userModel: mongoose.Model<IUser> = mongoose.model('User', userSchema);
