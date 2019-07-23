@@ -14,7 +14,7 @@ export abstract class ModelRouter<T extends mongoose.Document> extends BaseRoute
     }
 
     public findById = (req: restify.Request, res: restify.Response, next: restify.Next) => {
-        this.model.findById(req.params.id)
+        this.prepareOneQuery(this.model.findById(req.params.id))
             .exec()
             .then(this.render(req, res, next))
             .catch(next);
@@ -49,5 +49,9 @@ export abstract class ModelRouter<T extends mongoose.Document> extends BaseRoute
     public delete = (req: restify.Request, res: restify.Response, next: restify.Next) => {
         this.model.findByIdAndDelete(req.params.id).exec()
             .then(this.render(req, res, next)).catch(next);
+    }
+
+    protected prepareOneQuery(query: mongoose.DocumentQuery<T | null, T>): mongoose.DocumentQuery<T | null, T> {
+        return query;
     }
 }

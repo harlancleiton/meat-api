@@ -4,7 +4,7 @@ import { NotFoundError } from 'restify-errors';
 import { ModelRouter } from '../routers/model-router';
 import { IRestaurant, restaurantModel } from './restaurant.model';
 
-class RestaurantRouter extends ModelRouter<IRestaurant>{
+class RestaurantRouter extends ModelRouter<IRestaurant> {
     constructor() {
         super(restaurantModel);
     }
