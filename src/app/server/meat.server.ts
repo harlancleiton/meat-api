@@ -1,8 +1,8 @@
 import * as mongoose from 'mongoose';
 import * as restify from 'restify';
 import { environment } from '../../environments/environment';
+import { errorHandler } from '../handlers/error.handler';
 import { IRouter } from '../interfaces/router.interface';
-import { errorHandler } from './error.handler';
 
 class MeatServer {
     // tslint:disable-next-line: variable-name
@@ -58,4 +58,4 @@ class MeatServer {
 
 }
 
-export default new MeatServer();
+export const meatServer: MeatServer = new MeatServer();

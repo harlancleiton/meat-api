@@ -1,10 +1,11 @@
-import meatServer from './app/server/meat.server';
-import { Router } from './app/server/router';
+import * as mongoose from 'mongoose';
+import { BaseRouter } from './app/routers/base-router';
+import { meatServer } from './app/server/meat.server';
 import { userRouter } from './app/users/user.router';
 
 console.log('Hello World');
 
-const routers: Router[] = [
+const routers: Array<BaseRouter<mongoose.Document>> = [
     userRouter,
 ];
 
