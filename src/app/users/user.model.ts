@@ -48,5 +48,7 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
 );
 
 userSchema.pre('save', encryptPassword);
+userSchema.pre('findOneAndUpdate', encryptPassword);
+userSchema.pre('update', encryptPassword);
 
 export const userModel: mongoose.Model<IUser> = mongoose.model('User', userSchema);
