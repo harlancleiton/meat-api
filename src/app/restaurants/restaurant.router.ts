@@ -2,9 +2,9 @@ import * as mongoose from 'mongoose';
 import * as restify from 'restify';
 import { NotFoundError } from 'restify-errors';
 import { ModelRouter } from '../routers/model-router';
-import { IRestaurant, restaurantModel } from './restaurant.model';
+import { IRestaurant, IRestaurantModel, restaurantModel } from './restaurant.model';
 
-class RestaurantRouter extends ModelRouter<IRestaurant> {
+class RestaurantRouter extends ModelRouter<IRestaurant, IRestaurantModel> {
     constructor() {
         super(restaurantModel);
     }

@@ -2,8 +2,8 @@ import * as mongoose from 'mongoose';
 import * as restify from 'restify';
 import { BaseRouter } from './base-router';
 
-export abstract class ModelRouter<T extends mongoose.Document> extends BaseRouter<T> {
-    constructor(protected model: mongoose.Model<T>) {
+export abstract class ModelRouter<T extends mongoose.Document, U extends mongoose.Model<T>> extends BaseRouter<T> {
+    constructor(protected model: U) {
         super();
     }
 

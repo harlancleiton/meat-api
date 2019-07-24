@@ -11,6 +11,10 @@ export interface IUser extends mongoose.Document {
     updatedAt: Date;
 }
 
+export interface IUserModel extends mongoose.Model<IUser> {
+    findByEmail(email: string): Promise<IUser | null>;
+}
+
 const userSchema: mongoose.Schema = new mongoose.Schema({
     cpf: {
         type: String,
@@ -47,8 +51,12 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
     }
 );
 
+userSchema.statics.findByEmail = function (email: string) {
+    return this.findOne({ email });
+};
+
 userSchema.pre('save', encryptPassword);
 userSchema.pre('findOneAndUpdate', encryptPassword);
 userSchema.pre('update', encryptPassword);
 
-export const userModel: mongoose.Model<IUser> = mongoose.model('User', userSchema);
+export const userModel: IUserModel = mongoose.model<IUser, IUserModel>('User', userSchema);

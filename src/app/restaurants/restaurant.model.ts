@@ -14,6 +14,10 @@ export interface IRestaurant extends mongoose.Document {
     updatedAt: Date;
 }
 
+export interface IRestaurantModel extends mongoose.Model<IRestaurant> {
+    // tslint:disable-next-line: no-trailing-whitespace
+}
+
 const menuSchema = new mongoose.Schema({
     name: {
         required: true,
@@ -44,4 +48,5 @@ const restaurantSchema = new mongoose.Schema({
         timestamps: true
     });
 
-export const restaurantModel: mongoose.Model<IRestaurant> = mongoose.model<IRestaurant>('Restaurant', restaurantSchema);
+// tslint:disable-next-line: max-line-length
+export const restaurantModel: IRestaurantModel = mongoose.model<IRestaurant, IRestaurantModel>('Restaurant', restaurantSchema);

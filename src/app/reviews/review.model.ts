@@ -11,6 +11,10 @@ export interface IReview extends mongoose.Document {
     updatedAt: Date;
 }
 
+export interface IReviewModel extends mongoose.Model<IReview> {
+    // tslint:disable-next-line: no-trailing-whitespace
+}
+
 const reviewSchema = new mongoose.Schema({
     comments: {
         maxlength: 500,
@@ -36,4 +40,4 @@ const reviewSchema = new mongoose.Schema({
         timestamps: true
     });
 
-export const reviewModel: mongoose.Model<IReview> = mongoose.model('Review', reviewSchema);
+export const reviewModel: IReviewModel = mongoose.model<IReview, IReviewModel>('Review', reviewSchema);

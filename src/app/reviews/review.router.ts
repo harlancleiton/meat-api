@@ -2,9 +2,9 @@ import * as mongoose from 'mongoose';
 import * as restify from 'restify';
 import { NotFoundError } from 'restify-errors';
 import { ModelRouter } from '../routers/model-router';
-import { IReview, reviewModel } from './review.model';
+import { IReview, IReviewModel, reviewModel } from './review.model';
 
-class ReviewRouter extends ModelRouter<IReview> {
+class ReviewRouter extends ModelRouter<IReview, IReviewModel> {
     constructor() {
         super(reviewModel);
     }
