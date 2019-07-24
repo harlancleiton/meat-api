@@ -11,7 +11,7 @@ export abstract class BaseRouter<T extends mongoose.Document> extends EventEmitt
         return (document: T): void => {
             if (document) {
                 this.emit('beforeRender', document);
-                res.json(document);
+                res.json(this.envelope(document));
             } else {
                 res.send(404);
             }
@@ -22,15 +22,20 @@ export abstract class BaseRouter<T extends mongoose.Document> extends EventEmitt
     public renderAll(req: restify.Request, res: restify.Response, next: restify.Next): any {
         return (documents: T[]) => {
             if (documents && documents.length > 0) {
-                documents.forEach((document: T) => {
+                documents.forEach((document: T, index: number, array: T[]) => {
                     this.emit('beforeRender', document);
-                    res.json(documents);
+                    array[index] = this.envelope(document);
                 });
+                res.json(documents);
             } else {
                 res.json([]);
             }
             return next();
         };
+    }
+
+    protected envelope(document: T): T {
+        return document;
     }
 
     protected validateId = (req: restify.Request, res: restify.Response, next: restify.Next) => {

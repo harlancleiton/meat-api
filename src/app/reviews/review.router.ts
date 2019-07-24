@@ -10,11 +10,19 @@ class ReviewRouter extends ModelRouter<IReview, IReviewModel> {
     }
 
     public applyRouter(application: restify.Server) {
-        application.get('/reviews', this.findAll);
-        application.get('/reviews/:id', [this.validateId, this.findById]);
-        application.post('/reviews', this.create);
-        application.put('/reviews/:id', [this.validateId, this.replace]);
-        application.del('/reviews/:id', [this.validateId, this.delete]);
+        application.get(this.basePath, this.findAll);
+        application.get(`${this.basePath}/:id`, [this.validateId, this.findById]);
+        application.post(this.basePath, this.create);
+        application.put(`${this.basePath}/:id`, [this.validateId, this.replace]);
+        application.del(`${this.basePath}/:id`, [this.validateId, this.delete]);
+    }
+
+    protected envelope(document: IReview): IReview {
+        console.log('review envelope');
+        const resource: IReview | any = super.envelope(document);
+        const restaurantId = document.restaurant._id ? document.restaurant._id : document.restaurant;
+        resource._links.restaurant = `/restaurants/${restaurantId}`;
+        return resource;
     }
 
     protected prepareOneQuery(query: mongoose.DocumentQuery<IReview | null, IReview>)

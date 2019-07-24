@@ -3,8 +3,10 @@ import * as restify from 'restify';
 import { BaseRouter } from './base-router';
 
 export abstract class ModelRouter<T extends mongoose.Document, U extends mongoose.Model<T>> extends BaseRouter<T> {
+    protected basePath: string;
     constructor(protected model: U) {
         super();
+        this.basePath = `/${model.collection.name}`;
     }
 
     public findAll = (req: restify.Request, res: restify.Response, next: restify.Next) => {
@@ -49,6 +51,12 @@ export abstract class ModelRouter<T extends mongoose.Document, U extends mongoos
     public delete = (req: restify.Request, res: restify.Response, next: restify.Next) => {
         this.model.findByIdAndDelete(req.params.id).exec()
             .then(this.render(req, res, next)).catch(next);
+    }
+
+    protected envelope(document: T): T {
+        const resource: T | any = Object.assign({ _links: {} }, document.toJSON());
+        resource._links.self = `${this.basePath}/${resource._id}`;
+        return resource;
     }
 
     protected prepareOneQuery(query: mongoose.DocumentQuery<T | null, T>): mongoose.DocumentQuery<T | null, T> {
