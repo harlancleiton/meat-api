@@ -18,9 +18,8 @@ class ReviewRouter extends ModelRouter<IReview, IReviewModel> {
     }
 
     protected envelope(document: IReview): IReview {
-        console.log('review envelope');
         const resource: IReview | any = super.envelope(document);
-        const restaurantId = document.restaurant._id ? document.restaurant._id : document.restaurant;
+        const restaurantId = resource.restaurant._id ? resource.restaurant._id : resource.restaurant;
         resource._links.restaurant = `/restaurants/${restaurantId}`;
         return resource;
     }

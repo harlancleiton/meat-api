@@ -1,18 +1,33 @@
 import * as mongoose from 'mongoose';
 import * as restify from 'restify';
+import { environment } from '../../environments/environment';
+import { IPageOptions } from '../interfaces/page-options.interface';
 import { BaseRouter } from './base-router';
 
 export abstract class ModelRouter<T extends mongoose.Document, U extends mongoose.Model<T>> extends BaseRouter<T> {
     protected basePath: string;
+
     constructor(protected model: U) {
         super();
         this.basePath = `/${model.collection.name}`;
     }
 
     public findAll = (req: restify.Request, res: restify.Response, next: restify.Next) => {
-        this.model.find()
-            .then(this.renderAll(req, res, next))
-            .catch(next);
+        const pageSize: number = parseInt(req.query.pageSize || environment.pagination.size, 10);
+        const pageNumber: number = parseInt(req.query.pageNumber || environment.pagination.page, 10);
+        const skip: number = (pageNumber - 1) * pageSize;
+        const first: boolean = pageNumber === 1;
+        this.model.countDocuments({}).exec()
+            .then((totalElements: number) => {
+                const last: boolean = totalElements <= pageNumber * pageSize;
+                this.model.find()
+                    // TODO sort
+                    // .sort('createdAt', -1)
+                    .limit(pageSize)
+                    .skip(skip)
+                    .then(this.renderAll(req, res, next, { pageNumber, pageSize, totalElements, first, last }))
+                    .catch(next);
+            });
     }
 
     public findById = (req: restify.Request, res: restify.Response, next: restify.Next) => {
@@ -56,6 +71,25 @@ export abstract class ModelRouter<T extends mongoose.Document, U extends mongoos
     protected envelope(document: T): T {
         const resource: T | any = Object.assign({ _links: {} }, document.toJSON());
         resource._links.self = `${this.basePath}/${resource._id}`;
+        return resource;
+    }
+
+    protected envelopeAll(documents: T[], pageOptions: IPageOptions): T[] {
+        const resource: any = {
+            _links: {
+                self: ''
+            },
+            data: {
+                items: documents,
+                pagination: pageOptions,
+            }
+        };
+        if (pageOptions.pageNumber) {
+            // tslint:disable-next-line: max-line-length
+            resource._links.previous = pageOptions.first ? undefined : `${this.basePath}?pageNumber=${pageOptions.pageNumber - 1}`;
+            // tslint:disable-next-line: max-line-length
+            resource._links.next = pageOptions.last ? undefined : `${this.basePath}?pageNumber=${parseInt(pageOptions.pageNumber.toString(), 10) + 1}`;
+        }
         return resource;
     }
 

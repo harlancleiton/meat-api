@@ -1,5 +1,6 @@
 export const environment = {
     database: { url: process.env.DATABASE_URL || 'mongodb://localhost/meat-dev' },
+    pagination: { size: 10, page: 1, orderBy: 'createdAt', sort: -1 },
     security: {
         jwtExpiration: process.env.JWT_EXPIRATION || 15,
         prefixToken: process.env.PREFIX_TOKEN || 'Bearer',
