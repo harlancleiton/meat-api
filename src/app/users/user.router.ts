@@ -1,5 +1,6 @@
 import * as mongoose from 'mongoose';
 import * as restify from 'restify';
+import { IPageOptions } from '../interfaces/page-options.interface';
 import { ModelRouter } from '../routers/model-router';
 import { IUser, IUserModel, userModel } from './user.model';
 
@@ -24,10 +25,14 @@ class UserRouter extends ModelRouter<IUser, IUserModel> {
 
     private findByEmail = (req: restify.Request, res: restify.Response, next: restify.Next) => {
         if (req.query.email) {
-            this.model.findByEmail(req.query.email)
-                .then((user) => user ? [user] : [])
-                .then(this.renderAll(req, res, next))
-                .catch(next);
+            this.model.countDocuments({ email: req.query.email })
+                .then((totalElements: number) => {
+                    const pageOptions: IPageOptions = this.generatePageOptions(req, totalElements);
+                    this.model.findByEmail(req.query.email)
+                        .then((user) => user ? [user] : [])
+                        .then(this.renderAll(req, res, next, pageOptions))
+                        .catch(next);
+                }).catch(next);
         } else {
             return next();
         }

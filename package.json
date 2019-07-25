@@ -5,10 +5,26 @@
   "main": "src/index.ts",
   "scripts": {
     "devBuild": "node_modules/.bin/tsc -w",
-    "dev": "set NODE_ENV=development && node_modules/.bin/nodemon --delay 3 dist"
+    "dev": "set NODE_ENV=development && node_modules/.bin/nodemon --delay 3 dist",
+    "test": "jest --detectOpenHandles"
   },
   "author": "Harlan Cleiton",
   "license": "MIT",
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
   "dependencies": {
     "bcrypt": "^3.0.6",
     "cors": "^2.8.5",
@@ -21,14 +37,19 @@
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
     "@types/cors": "^2.8.5",
+    "@types/jest": "^24.0.15",
     "@types/jsonwebtoken": "^8.3.2",
     "@types/moment": "^2.13.0",
     "@types/mongoose": "^5.5.8",
     "@types/node": "^12.6.2",
     "@types/restify": "^7.2.11",
     "@types/restify-errors": "^4.3.3",
+    "@types/supertest": "^2.0.8",
     "@types/typescript": "^2.0.0",
+    "jest": "^24.8.0",
     "nodemon": "^1.19.1",
+    "supertest": "^4.0.2",
+    "ts-jest": "^24.0.2",
     "tslint": "^5.18.0",
     "typescript": "^3.5.3"
   }

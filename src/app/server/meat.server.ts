@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment';
 import { errorHandler } from '../handlers/error.handler';
 import { IRouter } from '../interfaces/router.interface';
 
-class MeatServer {
+export class MeatServer {
     // tslint:disable-next-line: variable-name
     private _application: restify.Server | undefined;
 
@@ -16,6 +16,12 @@ class MeatServer {
         return this.initializeDatabase()
             .then(() => this.initRoutes(routers)
                 .then(() => this));
+    }
+
+    public shutdown() {
+        return mongoose.disconnect()
+            .then(() => this.application.close())
+            .catch(fail);
     }
 
     private initializeDatabase(): Promise<mongoose.Mongoose> {
@@ -44,7 +50,7 @@ class MeatServer {
                     router.applyRouter(this._application!);
                 });
 
-                this._application.listen(3000, () => {
+                this._application.listen(environment.server.port, () => {
                     resolve(this._application);
                 });
 

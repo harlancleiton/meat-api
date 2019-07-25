@@ -13,19 +13,15 @@ export abstract class ModelRouter<T extends mongoose.Document, U extends mongoos
     }
 
     public findAll = (req: restify.Request, res: restify.Response, next: restify.Next) => {
-        const pageSize: number = parseInt(req.query.pageSize || environment.pagination.size, 10);
-        const pageNumber: number = parseInt(req.query.pageNumber || environment.pagination.page, 10);
-        const skip: number = (pageNumber - 1) * pageSize;
-        const first: boolean = pageNumber === 1;
         this.model.countDocuments({}).exec()
             .then((totalElements: number) => {
-                const last: boolean = totalElements <= pageNumber * pageSize;
+                const pageOptions: IPageOptions = this.generatePageOptions(req, totalElements);
                 this.model.find()
                     // TODO sort
                     // .sort('createdAt', -1)
-                    .limit(pageSize)
-                    .skip(skip)
-                    .then(this.renderAll(req, res, next, { pageNumber, pageSize, totalElements, first, last }))
+                    .limit(pageOptions.pageSize)
+                    .skip(pageOptions.skip)
+                    .then(this.renderAll(req, res, next, pageOptions))
                     .catch(next);
             });
     }
@@ -95,5 +91,14 @@ export abstract class ModelRouter<T extends mongoose.Document, U extends mongoos
 
     protected prepareOneQuery(query: mongoose.DocumentQuery<T | null, T>): mongoose.DocumentQuery<T | null, T> {
         return query;
+    }
+
+    protected generatePageOptions(req: restify.Request, totalElements: number): IPageOptions {
+        const pageSize: number = parseInt(req.query.pageSize || environment.pagination.size, 10);
+        const pageNumber: number = parseInt(req.query.pageNumber || environment.pagination.page, 10);
+        const skip: number = (pageNumber - 1) * pageSize;
+        const first: boolean = pageNumber === 1;
+        const last: boolean = totalElements <= pageNumber * pageSize;
+        return { pageNumber, pageSize, totalElements, first, last, skip };
     }
 }
