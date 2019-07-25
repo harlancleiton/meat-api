@@ -56,7 +56,10 @@ export abstract class ModelRouter<T extends mongoose.Document, U extends mongoos
     public update = (req: restify.Request, res: restify.Response, next: restify.Next) => {
         const options: mongoose.QueryFindOneAndUpdateOptions = { new: true, runValidators: true };
         this.model.findByIdAndUpdate(req.params.id, req.body, options).exec()
-            .then(this.render(req, res, next)).catch(next);
+            .then(() => {
+                res.send(204);
+                return next();
+            }).catch(next);
     }
 
     public delete = (req: restify.Request, res: restify.Response, next: restify.Next) => {

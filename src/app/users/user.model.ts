@@ -5,7 +5,9 @@ import { cpfValidator } from '../validators/cpf.validator';
 export interface IUser extends mongoose.Document {
     id: string;
     name: string;
+    cpf: string;
     email: string;
+    gender: 'MALE' | 'FEMALE';
     password?: string;
     createdAt: Date;
     updatedAt: Date;

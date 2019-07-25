@@ -1,10 +1,16 @@
-import 'jest'
+import 'jest';
 import * as supertest from 'supertest';
 import { environment } from '../../environments/environment';
 import { meatServer, MeatServer } from '../server/meat.server';
 import { IUser, userModel } from './user.model';
 import { userRouter } from './user.router';
 
+const name = 'Harlan Cleiton';
+const email = 'harlancleiton@gmail.com';
+const password = 'password';
+const cpf = '92232767728';
+const gender = 'MALE';
+const user = { name, email, password, cpf, gender };
 let address: string;
 let server: MeatServer;
 beforeAll(() => {
@@ -31,15 +37,36 @@ test('get /users', () => {
         }).catch(fail);
 });
 
-test('post /users', () => {
-    const name = 'Harlan Cleiton';
-    const email = 'harlancleiton@gmail.com';
-    const password = 'password';
-    const cpf = '92232767728';
-    const gender = 'MALE';
+test('get /users/invalidId', () => {
+    return supertest(address)
+        .get('/users/aaa')
+        .then((response) => {
+            expect(response.status).toBe(400);
+        }).catch(fail);
+});
+
+test('path /users/:id', () => {
     return supertest(address)
         .post('/users')
-        .send({ name, email, password, cpf, gender })
+        .send({
+            email: 'usuario2@email.com',
+            name: 'usuario2',
+            password: '123456'
+        })
+        .then((response) => supertest(address)
+            .patch(`/users/${response.body._id}`)
+            .send({ name: 'Harlan Cleiton da Silva' })
+            .then((response2) => {
+                expect(response2.status).toBe(204);
+                expect(response2.body).toEqual({});
+            }).catch(fail))
+        .catch(fail);
+});
+
+test('post /users', () => {
+    return supertest(address)
+        .post('/users')
+        .send(user)
         .then((response) => {
             expect(response.status).toBe(200);
             expect(response.body._id).toBeDefined();
