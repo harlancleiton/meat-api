@@ -11,7 +11,11 @@ const password = 'password';
 const cpf = '92232767728';
 const gender = 'MALE';
 const user = { name, email, password, cpf, gender };
-let address: string;
+
+const address: string = (global as any).address;
+console.log(address);
+
+/*
 let server: MeatServer;
 beforeAll(() => {
     environment.database.url = process.env.DATABASE_URL || 'mongodb://localhost/meat-api-test';
@@ -28,6 +32,7 @@ afterAll(() => {
         .then(() => server.shutdown())
         .catch(fail);
 });
+*/
 
 test('get /users', () => {
     return supertest(address)

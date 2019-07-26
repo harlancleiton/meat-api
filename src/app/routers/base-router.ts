@@ -16,7 +16,7 @@ export abstract class BaseRouter<T extends mongoose.Document> extends EventEmitt
             } else {
                 res.send(404);
             }
-            return next();
+            return next(false);
         };
     }
 
@@ -31,7 +31,7 @@ export abstract class BaseRouter<T extends mongoose.Document> extends EventEmitt
             } else {
                 res.json(this.envelopeAll([], pageOptions));
             }
-            return next();
+            return next(false);
         };
     }
 

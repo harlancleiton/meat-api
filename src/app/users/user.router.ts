@@ -34,7 +34,7 @@ class UserRouter extends ModelRouter<IUser, IUserModel> {
                         .catch(next);
                 }).catch(next);
         } else {
-            return next();
+            next();
         }
     }
 

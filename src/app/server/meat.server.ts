@@ -18,7 +18,7 @@ export class MeatServer {
                 .then(() => this));
     }
 
-    public shutdown() {
+    public shutdown(): Promise<void> {
         return mongoose.disconnect()
             .then(() => this.application.close())
             .catch(fail);
