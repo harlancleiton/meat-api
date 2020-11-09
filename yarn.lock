@@ -1625,9 +1625,9 @@ fill-range@^4.0.0:
     to-regex-range "^2.1.0"
 
 find-my-way@^2.0.1:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/find-my-way/-/find-my-way-2.1.0.tgz#dc9bfe2ab12ce8f965f489794134789e8fd56881"
-  integrity sha512-Hdx6ctcrzkZH5y9EREHtXryXAgc5Bc8z5Cvoa61y9kaoYj2KU4yXD6h8b6u0NUkYPVmQQeRdf0AtG1kQxQ+ukQ==
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/find-my-way/-/find-my-way-2.2.5.tgz#86ce825266fa28cd962e538a45ec2aaa84c3d514"
+  integrity sha512-GjRZZlGcGmTh9t+6Xrj5K0YprpoAFCAiCPgmAH9Kb09O4oX6hYuckDfnDipYj+Q7B1GtYWSzDI5HEecNYscLQg==
   dependencies:
     fast-decode-uri-component "^1.0.0"
     safe-regex2 "^2.0.0"
@@ -3136,7 +3136,7 @@ mkdirp@0.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.1:
   dependencies:
     minimist "0.0.8"
 
-moment@*, moment@^2.10.6, moment@^2.24.0:
+moment@*, moment@^2.10.6:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
   integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
